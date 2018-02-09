@@ -1,0 +1,1 @@
+#This template deploy a smaple architecture with a Azure Subnet Gateway
