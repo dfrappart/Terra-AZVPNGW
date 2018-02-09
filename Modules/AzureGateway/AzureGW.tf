@@ -35,7 +35,16 @@ variable "GWIPConfName" {
     default = "DefaultGWConf"
 }
 
+variable "GWPRivateIPAlloc" {
+    type    = "string"
+    default = "Dynamic"
+}
+
 variable "GWSubnetId" {
+    type = "string"
+}
+
+variable "GWPIPId" {
     type = "string"
 }
 
