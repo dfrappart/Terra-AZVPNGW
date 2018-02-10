@@ -1,1 +1,1 @@
-#This template deploy a smaple architecture with a Azure Subnet Gateway
+#This template deploy a Sample architecture with a Azure VPN Gateway
