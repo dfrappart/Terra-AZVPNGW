@@ -22,11 +22,35 @@ variable "GWLocation" {
 
 variable "GWType" {
   type    = "string"
+  default = "Vpn"
 
+}
+
+variable "GWVpnType" {
+  type    = "string"
+  default = "Routebased"
+  #default = "Policybased"
+  
+}
+
+variable "EnableBGP" {
+  type    = "string"
+  default = "false"
+
+  
+}
+
+variable "FTOption" {
+  type = "string"
+  default = "false"
 }
 
 variable "GWsku" {
   type    = "string"
+  default = "VpnGw1"
+  #default = "VpnGw2"
+  #default = "VpnGw3"
+  #default = "Basic"
 
 }
 
@@ -45,7 +69,12 @@ variable "GWSubnetId" {
 }
 
 variable "GWPIPId" {
-    type = "string"
+    type = "list"
+}
+
+variable "count" {
+    type    = "string"
+    default = "1"
 }
 
 variable "EnvironmentTag" {
@@ -60,14 +89,17 @@ variable "EnvironmentUsageTag" {
 
 #Creation of the VPN Gateway
 
-resource "azurerm_subnet" "TerraVirtualNetworkGW" {
+resource "azurerm_virtual_network_gateway" "TerraVirtualNetworkGW" {
 
 
-
+    count                       = "${var.count}"
     name                        = "${var.GWName}"
     resource_group_name         = "${var.GWRGName}"
     location                    = "${var.GWLocation}"
     type                        = "${var.GWType}"
+    vpn_type                    = "${var.GWVpnType}"
+    enable_bgp                  = "${var.EnableBGP}"
+    active_active               = "${var.FTOption}"
     sku                         = "${var.GWsku}"
     
     ip_configuration {
@@ -75,7 +107,7 @@ resource "azurerm_subnet" "TerraVirtualNetworkGW" {
         name                            = "${var.GWIPConfName}"
         private_ip_address_allocation   = "${var.GWPRivateIPAlloc}"
         subnet_id                       = "${var.GWSubnetId}"
-        public_ip_address_id            = "${var.GWPIPId}"
+        public_ip_address_id            = "${element(var.GWPIPId,count.index)}"
 
     }
 
@@ -97,15 +129,20 @@ resource "azurerm_subnet" "TerraVirtualNetworkGW" {
 
 output "Name" {
 
-  value = "${azurerm_subnet.TerraSubnet.name}"
+  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.name}"]
 }
 
 output "Id" {
 
-  value = "${azurerm_subnet.TerraSubnet.id}"
+  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.id}"]
 }
 
-output "AddressPrefix" {
+output "Type" {
 
-  value = "${azurerm_subnet.TerraSubnet.address_prefix}"
+  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.type}"]
+}
+
+output "Sku" {
+
+  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.sku}"]
 }
