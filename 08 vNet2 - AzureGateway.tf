@@ -14,6 +14,7 @@ module "Gateway_vNet2_PIP" {
     PublicIPName            = "gwvnet2pip"
     PublicIPLocation        = "${lookup(var.AzureRegion, 1)}"
     RGName                  = "${module.ResourceGroup.Name}"
+    PIPAddressAllocation    = "Dynamic"
     EnvironmentTag          = "${var.EnvironmentTag}"
     EnvironmentUsageTag     = "${var.EnvironmentUsageTag}"
 
