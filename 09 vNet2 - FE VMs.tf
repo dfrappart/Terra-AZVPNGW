@@ -24,7 +24,47 @@ module "AllowHTTPFromInternetFESubnet2In" {
     NSGRuleDestinationAddressPrefix = "${lookup(var.vNet2SubnetAddressRange, 0)}"
 }
 
+#NSG rules for vNet to vNet Connectivity
 
+module "AllowAllFromvNet1toFEAppsIn" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_FEApps_Subnet_vNet2.Name}"
+    NSGRuleName                             = "AllowAllFromvNet1toFEAppsIn"
+    NSGRulePriority                         = 102
+    NSGRuleDirection                        = "Inbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "10.0.0.0/22"
+    NSGRuleDestinationAddressPrefix         = "${lookup(var.vNet2SubnetAddressRange, 0)}"
+}
+
+module "AllowAllFromFEAppstovNet1Out" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_FEApps_Subnet_vNet2.Name}"
+    NSGRuleName                             = "AllowAllFromFEAppstovNet1Out"
+    NSGRulePriority                         = 103
+    NSGRuleDirection                        = "Outbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "${lookup(var.vNet2SubnetAddressRange, 0)}"
+    NSGRuleDestinationAddressPrefix         = "10.0.0.0/22"
+}
 
 
 

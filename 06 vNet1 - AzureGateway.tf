@@ -34,8 +34,35 @@ module "Gateway_vNet1" {
     GWRGName                = "${module.ResourceGroup.Name}"
     GWLocation              = "${lookup(var.AzureRegion, 0)}"
     GWSubnetId              = "${module.GW_Subnet_vNet1.Id}"
-    GWPIPId                 = ["${module.Gateway_vNet1_PIP.Ids}"]
+    GWPIPId                 = "${element(module.Gateway_vNet1_PIP.Ids,0)}"
     EnvironmentTag          = "${var.EnvironmentTag}"
     EnvironmentUsageTag     = "${var.EnvironmentUsageTag}"
+
+}
+
+module "ConnectionSK" {
+
+    #Module source
+    source = "./Modules/RandomString"
+        
+}
+
+module "vNet1_to_vNet2_Connection" {
+
+    #Module source
+    source = "./Modules/VNET2VNETConnection"
+    
+
+    #Module variable
+
+    GWConnectionName        = "vNet1_to_vNet2_Connection"
+    GWConnectionRG          = "${module.ResourceGroup.Name}"
+    GWConnectionLocation    = "${lookup(var.AzureRegion, 0)}"
+    GWConnectionGWId        = "${module.Gateway_vNet1.Id}"
+    GWConnectionPeerGWId    = "${module.Gateway_vNet2.Id}"
+    GWConnectionSK          = "${module.ConnectionSK.Result}"
+    EnvironmentTag          = "${var.EnvironmentTag}"
+    EnvironmentUsageTag     = "${var.EnvironmentUsageTag}"
+
 
 }

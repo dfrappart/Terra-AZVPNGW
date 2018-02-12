@@ -25,8 +25,47 @@ module "AllowHTTPFromInternetFESubnet1In" {
 }
 
 
+#NSG rules for vNet to vNet Connectivity
 
+module "AllowAllFromvNet2toFEAppsIn" {
 
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_FEApps_Subnet_vNet1.Name}"
+    NSGRuleName                             = "AllowAllFromvNet2toFEAppsIn"
+    NSGRulePriority                         = 102
+    NSGRuleDirection                        = "Inbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "10.0.4.0/22"
+    NSGRuleDestinationAddressPrefix         = "${lookup(var.vNet1SubnetAddressRange, 0)}"
+}
+
+module "AllowAllFromFEAppstovNet2Out" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_FEApps_Subnet_vNet1.Name}"
+    NSGRuleName                             = "AllowAllFromFEAppstovNet2Out"
+    NSGRulePriority                         = 103
+    NSGRuleDirection                        = "Outbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "${lookup(var.vNet1SubnetAddressRange, 0)}"
+    NSGRuleDestinationAddressPrefix         = "10.0.4.0/22"
+}
 
 #Azure Load Balancer public IP Creation
 

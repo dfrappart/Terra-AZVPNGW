@@ -46,6 +46,49 @@ module "AllowRDPFromInternettoFEAdminIn" {
     NSGRuleDestinationAddressPrefix = "${lookup(var.vNet1SubnetAddressRange, 3)}"
 }
 
+
+#NSG rules for vNet to vNet Connectivity
+
+module "AllowAllFromvNet2toFEAdminIn" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_FEADMIN_Subnet_vNet1.Name}"
+    NSGRuleName                             = "AllowAllFromvNet2toFEAdminIn"
+    NSGRulePriority                         = 106
+    NSGRuleDirection                        = "Inbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "10.0.4.0/22"
+    NSGRuleDestinationAddressPrefix         = "${lookup(var.vNet1SubnetAddressRange, 3)}"
+}
+
+module "AllowAllFromFEAdmintovNet2Out" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_FEADMIN_Subnet_vNet1.Name}"
+    NSGRuleName                             = "AllowAllFromFEAdmintovNet2Out"
+    NSGRulePriority                         = 107
+    NSGRuleDirection                        = "Outbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "${lookup(var.vNet1SubnetAddressRange, 3)}"
+    NSGRuleDestinationAddressPrefix         = "10.0.4.0/22"
+}
+
 #Bastion public IP Creation
 
 module "BastionPublicIP" {

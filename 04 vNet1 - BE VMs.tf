@@ -4,6 +4,47 @@
 
 #NSG Rules
 
+#NSG rules for vNet to vNet Connectivity
+
+module "AllowAllFromvNet2toBEAppsIn" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_BEApps_Subnet_vNet1.Name}"
+    NSGRuleName                             = "AllowAllFromvNet2toBEAppsIn"
+    NSGRulePriority                         = 101
+    NSGRuleDirection                        = "Inbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "10.0.4.0/22"
+    NSGRuleDestinationAddressPrefix         = "${lookup(var.vNet1SubnetAddressRange, 1)}"
+}
+
+module "AllowAllFromBEAppstovNet2Out" {
+
+    #Module source
+    #source = "./Modules/08 NSGRule"
+    source = "github.com/dfrappart/Terra-AZBasiclinuxWithModules//Modules//08 NSGRule"
+
+    #Module variable
+    RGName                                  = "${module.ResourceGroup.Name}"
+    NSGReference                            = "${module.NSG_BEApps_Subnet_vNet1.Name}"
+    NSGRuleName                             = "AllowAllFromBEAppstovNet2Out"
+    NSGRulePriority                         = 103
+    NSGRuleDirection                        = "Outbound"
+    NSGRuleAccess                           = "Allow"
+    NSGRuleProtocol                         = "*"
+    NSGRuleSourcePortRange                  = "*"
+    NSGRuleDestinationPortRange             = "*"
+    NSGRuleSourceAddressPrefix              = "${lookup(var.vNet1SubnetAddressRange, 1)}"
+    NSGRuleDestinationAddressPrefix         = "10.0.4.0/22"
+}
 
 #Availability set creation
 

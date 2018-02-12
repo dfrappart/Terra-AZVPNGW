@@ -1,5 +1,5 @@
 ##############################################################
-#This module allows the creation of a SubVPNnet Gateway
+#This module allows the creation of a VPN Gateway
 ##############################################################
 
 #Variable declaration for Module
@@ -69,7 +69,7 @@ variable "GWSubnetId" {
 }
 
 variable "GWPIPId" {
-    type = "list"
+    type = "string"
 }
 
 variable "count" {
@@ -92,7 +92,7 @@ variable "EnvironmentUsageTag" {
 resource "azurerm_virtual_network_gateway" "TerraVirtualNetworkGW" {
 
 
-    count                       = "${var.count}"
+    #count                       = "${var.count}"
     name                        = "${var.GWName}"
     resource_group_name         = "${var.GWRGName}"
     location                    = "${var.GWLocation}"
@@ -107,7 +107,8 @@ resource "azurerm_virtual_network_gateway" "TerraVirtualNetworkGW" {
         name                            = "${var.GWIPConfName}"
         private_ip_address_allocation   = "${var.GWPRivateIPAlloc}"
         subnet_id                       = "${var.GWSubnetId}"
-        public_ip_address_id            = "${element(var.GWPIPId,count.index)}"
+        #public_ip_address_id            = "${element(var.GWPIPId,count.index)}"
+        public_ip_address_id            = "${var.GWPIPId}"
 
     }
 
@@ -129,20 +130,23 @@ resource "azurerm_virtual_network_gateway" "TerraVirtualNetworkGW" {
 
 output "Name" {
 
-  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.name}"]
+  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.name}"]
 }
 
 output "Id" {
 
-  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.id}"]
+  #value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.id}"]
+  value = "${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.id}"
 }
 
 output "Type" {
 
-  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.type}"]
+  #value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.type}"]
+  value = "${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.type}"
 }
 
 output "Sku" {
 
-  value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.sku}"]
+  #value = ["${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.*.sku}"]
+  value = "${azurerm_virtual_network_gateway.TerraVirtualNetworkGW.sku}"
 }
