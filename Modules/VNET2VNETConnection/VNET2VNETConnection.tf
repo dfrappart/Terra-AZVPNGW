@@ -1,5 +1,5 @@
 ##############################################################
-#This module allows the creation of a VPN Gateway
+#This module allows the creation of a VPN connection
 ##############################################################
 
 #Variable declaration for Module
