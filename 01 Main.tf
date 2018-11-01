@@ -10,7 +10,7 @@
 # Configure the Microsoft Azure Provider with Azure provider variable defined in AzureDFProvider.tf
 
 provider "azurerm" {
-  subscription_id = "${var.AzureSubscriptionID}"
+  subscription_id = "${var.AzureSubscriptionID2}"
   client_id       = "${var.AzureClientID}"
   client_secret   = "${var.AzureClientSecret}"
   tenant_id       = "${var.AzureTenantID}"
@@ -138,7 +138,7 @@ module "InfraFileShare1" {
   ShareName          = "infrafileshare1"
   RGName             = "${module.ResourceGroup.Name}"
   StorageAccountName = "${module.FilesExchangeStorageAccount1.Name}"
-  Quota              = "0"
+  Quota              = "5120"
 }
 
 module "FilesExchangeStorageAccount2" {
